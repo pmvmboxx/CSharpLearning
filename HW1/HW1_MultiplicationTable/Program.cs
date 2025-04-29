@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HW_UpdatedMultiplicationTable
+namespace ConsoleApp1
 {
     internal class Program
     {
@@ -20,12 +20,15 @@ namespace HW_UpdatedMultiplicationTable
 
         static void Main(string[] args)
         {
-            while (true)
+            string choice = string.Empty;
+
+            do
             {
+                // TODO: добавить параметры, чтобы можно было передавать разные меню
                 ShowMenu();
 
                 Console.Write("Choose the task (or 0 to exit): ");
-                string choice = Console.ReadLine();
+                choice = Console.ReadLine();
 
                 switch (choice)
                 {
@@ -39,20 +42,30 @@ namespace HW_UpdatedMultiplicationTable
                         TableDoWhileLoop();
                         break;
                     case "4":
-                        MultiplicationTableTask();
+                        // TODO: реализовать ограничение по длине строки <=80 
+                        // TODO: посмотреть про локализацию
+                        int from_point = TryGetInput(DEFAULT_FROM, DEFAULT_TO, "the start point A", out int res) ? res : DEFAULT_FROM;
+                        int to_point = TryGetInput(from_point, DEFAULT_TO, "the end point B", out res) ? res : DEFAULT_TO;
+                        int columnQuantity = TryGetInput(COLUMN_NUMBER_RANGE_START, COLUMN_NUMBER_RANGE_END, "the column number", out res) ? res : DEFAULT_COLUMN_QUANTITY;
+                        CalculateRows(from_point, to_point, columnQuantity, out int rowQuantity, out int currentNumber);
+
+                        Console.Clear();
+                        DrawAllTables(to_point, columnQuantity, rowQuantity, currentNumber);
                         break;
                     case "0":
                         Console.WriteLine("Exiting...");
-                        return;
+                        break;
                     default:
                         Console.WriteLine("Incorrct input. Try again.\n");
                         break;
                 }
             }
+            while (choice != "0");
         }
 
         private static void ShowMenu()
         {
+            // TODO: test
             Console.WriteLine("\n=== TASK MENU ===");
             Console.WriteLine("1. Table with For Loop");
             Console.WriteLine("2. Table with While Loop");
@@ -64,7 +77,8 @@ namespace HW_UpdatedMultiplicationTable
 
         private static bool TryGetInput(int minValue, int maxValue, string message, out int res)
         {
-            string msg = string.Format("Please, enter {0} between {1} and {2}: ", message, minValue, maxValue);
+            string msg = string.Format("Please, enter {0} between {1} and {2}: ",
+                        message, minValue, maxValue);
             Console.Write(msg);
             bool fOK = false;
 
@@ -88,46 +102,28 @@ namespace HW_UpdatedMultiplicationTable
 
         private static void DrawTable(int positionX, int positionY, int tableNumber)
         {
-            var start_x = positionX;
-            var start_y = positionY;
-
             for (int i = DEFAULT_COLUMN_START; i <= DEFAULT_COLUMN_END; i++)
             {
-                Console.SetCursorPosition(start_x, start_y++);
+                Console.SetCursorPosition(positionX, positionY++);
                 Console.Write($"{tableNumber} * {i} = {tableNumber * i}");
             }
         }
 
-        private static void MultiplicationTableTask()
+        private static void CalculateRows(int from_point, int to_point,
+                int columnQuantity, out int rowQuantity, out int currentNumber)
         {
-            int from_point = TryGetInput(DEFAULT_FROM, DEFAULT_TO, "the start point A", out int res) ? res : DEFAULT_FROM;
-            int to_point = TryGetInput(from_point, DEFAULT_TO, "the end point B", out res) ? res : DEFAULT_TO;
-            int columnQuantity = TryGetInput(COLUMN_NUMBER_RANGE_START, COLUMN_NUMBER_RANGE_END, "the column number", out res) ? res : DEFAULT_COLUMN_QUANTITY;
+
             int tablesQuantity = to_point - from_point + 1;
-            int rowQuantity = tablesQuantity / columnQuantity + tablesQuantity % columnQuantity == 0 ? 0 : 1;
-            int currentNumber = from_point;
-
-
-            //int rowQuantity = (int)Math.Ceiling((double)(to_point - from_point + 1) / columnQuantity);
-            //int rowQuantity = (int)Math.Round((double)(to_point - from_point + 1) / columnQuantity);
-
-            /*Math.Ceiling() - always rounds up to the next whole number.
-             * Принимает - decimal/double.
-             * Возвращает - не целочисленное значение, а значение типа decimal/double.*/
-
-            /* Math.Round() - rounds to the nearest whole number.
-             * Если дробная часть a находится на равном расстоянии от двух целых чисел (четного и нечетного), возвращается четное число.
-             * Принимает - decimal/double.
-             * Возвращает - целое число, ближайшее к значению параметра a.
-             * Возвращает не целочисленное значение, а значение типа decimal/double.*/
-
-            Console.Clear();
-            DrawAllTables(DEFAULT_COLUMN_WIDTH, DEFAULT_ROW_HEIGHT, to_point, columnQuantity, rowQuantity, currentNumber);
+            rowQuantity = tablesQuantity / columnQuantity + tablesQuantity % columnQuantity == 0 ? 0 : 1;
+            currentNumber = from_point;
         }
 
-        private static void DrawAllTables(int DEFAULT_COLUMN_WIDTH, int DEFAULT_ROW_HEIGHT, int to, int columnQuantity, int rowQuantity, int currentNumber)
+        private static void DrawAllTables(int to, int columnQuantity,
+                int rowQuantity, int currentNumber)
         {
-            for (int j = 0; j < rowQuantity; j++)
+            bool done = false;
+
+            for (int j = 0; j < rowQuantity && !done; j++)
             {
                 for (int i = 0; i < columnQuantity; i++)
                 {
@@ -137,7 +133,9 @@ namespace HW_UpdatedMultiplicationTable
 
                     if (currentNumber == to)
                     {
-                        return;
+                        // TODO: как альтернативно закончить, без return (break?)
+                        done = true;
+                        break;
                     }
 
                     currentNumber++;
@@ -147,17 +145,12 @@ namespace HW_UpdatedMultiplicationTable
 
         private static void TableForLoop()
         {
-            const int columnLength = 15;
             Console.WriteLine("\t\t==== Multiplication Table ==== \t\t");
             for (int i = 1; i <= 10; i++)
             {
                 for (int j = 1; j <= 10; j++)
                 {
-                    int res = i * j;
-                    var str = $"{j} * {i} = {res}";
-                    var spaceNumbers = columnLength - str.Length;
-                    str += new string(' ', spaceNumbers);
-                    Console.Write(str);
+                    DisplayTable(i, j);
                     if (j == 10)
                     {
                         Console.Write("\n");
@@ -168,7 +161,6 @@ namespace HW_UpdatedMultiplicationTable
 
         private static void TableWhileLoop()
         {
-            const int columnLength = 15;
             Console.WriteLine("\t\t==== Multiplication Table ==== \t\t");
             int i = 1;
             while (i <= 10)
@@ -176,11 +168,7 @@ namespace HW_UpdatedMultiplicationTable
                 int j = 1;
                 while (j <= 10)
                 {
-                    int res = i * j;
-                    var str = $"{j} * {i} = {res}";
-                    var spaceNumbers = columnLength - str.Length;
-                    str += new string(' ', spaceNumbers);
-                    Console.Write(str);
+                    DisplayTable(i, j);
                     j++;
                 }
                 Console.Write("\n");
@@ -190,7 +178,6 @@ namespace HW_UpdatedMultiplicationTable
 
         private static void TableDoWhileLoop()
         {
-            const int columnLength = 15;
             Console.WriteLine("\t\t==== Multiplication Table ==== \t\t");
             int i = 1;
             do
@@ -198,16 +185,41 @@ namespace HW_UpdatedMultiplicationTable
                 int j = 1;
                 do
                 {
-                    int res = i * j;
-                    var str = $"{j} * {i} = {res}";
-                    var spaceNumbers = columnLength - str.Length;
-                    str += new string(' ', spaceNumbers);
-                    Console.Write(str);
+                    Console.WriteLine(FormatTable(i, j));
                     j++;
                 } while (j <= 10);
                 Console.Write("\n");
                 i++;
             } while (i <= 10);
         }
+
+        private static string FormatTable (int i, int j)
+        {
+            // TODO: придумать capacity
+            int res = i * j;
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append($"{j} * {i} = {res}");
+            int spaceNumbers = DEFAULT_COLUMN_WIDTH - sb.Length;
+            sb.Append(' ', spaceNumbers);
+
+            return sb.ToString();
+        }
+
+        private static string DrawTopBoarder(int lengthForColumns, int lengthForRows) 
+        {
+            StringBuilder sb = new StringBuilder(lengthForColumns);
+            sb.Append('');
+        }
+
+        private static string DrawLBottomBoarder() 
+        {
+        }
+
+        private static string DrawMiddleLine()
+        { 
+        }
+
+
     }
 }
