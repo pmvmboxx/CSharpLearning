@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HW1_MultiplicationTable;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,20 +34,22 @@ namespace ConsoleApp1
                 switch (choice)
                 {
                     case "1":
-                        TableForLoop();
+                        TableForLoop(DEFAULT_COLUMN_START, DEFAULT_COLUMN_END);
                         break;
                     case "2":
-                        TableWhileLoop();
+                        TableWhileLoop(DEFAULT_COLUMN_START, DEFAULT_COLUMN_END);
                         break;
                     case "3":
-                        TableDoWhileLoop();
+                        TableDoWhileLoop(DEFAULT_COLUMN_START, DEFAULT_COLUMN_END);
                         break;
                     case "4":
                         // TODO: реализовать ограничение по длине строки <=80 
                         // TODO: посмотреть про локализацию
                         int from_point = TryGetInput(DEFAULT_FROM, DEFAULT_TO, "the start point A", out int res) ? res : DEFAULT_FROM;
                         int to_point = TryGetInput(from_point, DEFAULT_TO, "the end point B", out res) ? res : DEFAULT_TO;
-                        int columnQuantity = TryGetInput(COLUMN_NUMBER_RANGE_START, COLUMN_NUMBER_RANGE_END, "the column number", out res) ? res : DEFAULT_COLUMN_QUANTITY;
+                        int columnQuantity = TryGetInput(COLUMN_NUMBER_RANGE_START,
+                            COLUMN_NUMBER_RANGE_END, "the column number", out res)
+                            ? res : DEFAULT_COLUMN_QUANTITY;
                         CalculateRows(from_point, to_point, columnQuantity, out int rowQuantity, out int currentNumber);
 
                         Console.Clear();
@@ -100,57 +103,69 @@ namespace ConsoleApp1
             return true;
         }
 
-        private static void DrawTable(int positionX, int positionY, int tableNumber)
-        {
-            for (int i = DEFAULT_COLUMN_START; i <= DEFAULT_COLUMN_END; i++)
-            {
-                Console.SetCursorPosition(positionX, positionY++);
-                Console.Write($"{tableNumber} * {i} = {tableNumber * i}");
-            }
-        }
-
         private static void CalculateRows(int from_point, int to_point,
                 int columnQuantity, out int rowQuantity, out int currentNumber)
         {
 
             int tablesQuantity = to_point - from_point + 1;
-            rowQuantity = tablesQuantity / columnQuantity + tablesQuantity % columnQuantity == 0 ? 0 : 1;
+            rowQuantity = (int)Math.Ceiling((double)(to_point - from_point + 1) / columnQuantity);
             currentNumber = from_point;
         }
 
         private static void DrawAllTables(int to, int columnQuantity,
                 int rowQuantity, int currentNumber)
         {
+            int tableWidth = DEFAULT_COLUMN_WIDTH;
+            int tableHeight = DEFAULT_COLUMN_END;
+
+            int totalWidth = columnQuantity * tableWidth + 2; // +2 для рамки
+            int totalHeight = rowQuantity * tableHeight + 6;  // +2 для рамки
+
+            Console.WriteLine("\t==== Multiplication Table ==== \t");
+            ConsoleViewer.DrawBoarders(totalWidth, totalHeight);
+
             bool done = false;
 
-            for (int j = 0; j < rowQuantity && !done; j++)
+            for (int row = 0; row < rowQuantity && !done; row++)
             {
-                for (int i = 0; i < columnQuantity; i++)
+                int posY = row * (tableHeight + 1) + 1;
+
+                for (int col = 0; col < columnQuantity; col++)
                 {
-                    int positionX = DEFAULT_COLUMN_WIDTH * i;
-                    int positionY = DEFAULT_ROW_HEIGHT * j;
-                    DrawTable(positionX, positionY, currentNumber);
+                    int posX = col * tableWidth + 1; 
+
+                    for (int i = 1; i <= DEFAULT_COLUMN_END; i++)
+                    {
+                        Console.SetCursorPosition(posX, posY + i);
+                        string content = $"{currentNumber} * {i} = {currentNumber * i}";
+                        Console.Write(content);
+                    }
 
                     if (currentNumber == to)
                     {
-                        // TODO: как альтернативно закончить, без return (break?)
                         done = true;
                         break;
                     }
 
                     currentNumber++;
                 }
+
+                if (row < rowQuantity - 1)
+                {
+                    Console.SetCursorPosition(1, posY + tableHeight);
+                    Console.WriteLine(new string('-', totalWidth - 2));
+                }
             }
         }
 
-        private static void TableForLoop()
+        private static void TableForLoop(int startNumber, int endNumber)
         {
             Console.WriteLine("\t\t==== Multiplication Table ==== \t\t");
             for (int i = 1; i <= 10; i++)
             {
-                for (int j = 1; j <= 10; j++)
+                for (int j = startNumber; j <= endNumber; j++)
                 {
-                    DisplayTable(i, j);
+                    Console.Write(FormatTable(i, j));
                     if (j == 10)
                     {
                         Console.Write("\n");
@@ -159,16 +174,16 @@ namespace ConsoleApp1
             }
         }
 
-        private static void TableWhileLoop()
+        private static void TableWhileLoop(int startNumber, int endNumber)
         {
             Console.WriteLine("\t\t==== Multiplication Table ==== \t\t");
             int i = 1;
             while (i <= 10)
             {
-                int j = 1;
-                while (j <= 10)
+                int j = startNumber;
+                while (j <= endNumber)
                 {
-                    DisplayTable(i, j);
+                    Console.Write(FormatTable(i, j));
                     j++;
                 }
                 Console.Write("\n");
@@ -176,28 +191,28 @@ namespace ConsoleApp1
             }
         }
 
-        private static void TableDoWhileLoop()
+        private static void TableDoWhileLoop(int startNumber, int endNumber)
         {
             Console.WriteLine("\t\t==== Multiplication Table ==== \t\t");
             int i = 1;
             do
             {
-                int j = 1;
+                int j = startNumber;
                 do
                 {
-                    Console.WriteLine(FormatTable(i, j));
+                    Console.Write(FormatTable(i, j));
                     j++;
-                } while (j <= 10);
+                } while (j <= endNumber);
                 Console.Write("\n");
                 i++;
             } while (i <= 10);
         }
 
-        private static string FormatTable (int i, int j)
+        private static string FormatTable(int i, int j)
         {
             // TODO: придумать capacity
             int res = i * j;
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder(DEFAULT_COLUMN_WIDTH);
 
             sb.Append($"{j} * {i} = {res}");
             int spaceNumbers = DEFAULT_COLUMN_WIDTH - sb.Length;
@@ -205,21 +220,5 @@ namespace ConsoleApp1
 
             return sb.ToString();
         }
-
-        private static string DrawTopBoarder(int lengthForColumns, int lengthForRows) 
-        {
-            StringBuilder sb = new StringBuilder(lengthForColumns);
-            sb.Append('');
-        }
-
-        private static string DrawLBottomBoarder() 
-        {
-        }
-
-        private static string DrawMiddleLine()
-        { 
-        }
-
-
     }
 }
