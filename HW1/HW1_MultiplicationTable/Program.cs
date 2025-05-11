@@ -21,19 +21,28 @@ namespace ConsoleApp1
 
         static void Main(string[] args)
         {
+            string[] menuItems = {
+                "Table with For Loop",
+                "Table with While Loop",
+                "Table with DoWhile Loop",
+                "Multiplication Table Task",
+                "exit"
+            };
+
             string choice = string.Empty;
 
             do
             {
                 // TODO: добавить параметры, чтобы можно было передавать разные меню
-                ShowMenu();
+                int selectedOption = ConsoleViewer.ShowMenu("TASK MENU", menuItems);
 
                 Console.Write("Choose the task (or 0 to exit): ");
-                choice = Console.ReadLine();
+                choice = selectedOption.ToString();
 
                 switch (choice)
                 {
                     case "1":
+
                         TableForLoop(DEFAULT_COLUMN_START, DEFAULT_COLUMN_END);
                         break;
                     case "2":
@@ -66,18 +75,6 @@ namespace ConsoleApp1
             while (choice != "0");
         }
 
-        private static void ShowMenu()
-        {
-            // TODO: test
-            Console.WriteLine("\n=== TASK MENU ===");
-            Console.WriteLine("1. Table with For Loop");
-            Console.WriteLine("2. Table with While Loop");
-            Console.WriteLine("3. Table with DoWhile Loop");
-            Console.WriteLine("4. Multiplication Table Task");
-            Console.WriteLine("0. exit");
-            Console.WriteLine();
-        }
-
         private static bool TryGetInput(int minValue, int maxValue, string message, out int res)
         {
             string msg = string.Format("Please, enter {0} between {1} and {2}: ",
@@ -87,7 +84,7 @@ namespace ConsoleApp1
 
             do
             {
-                string str = Console.ReadLine();
+                string? str = Console.ReadLine();
                 if (string.IsNullOrEmpty(str))
                 {
                     res = -1;
@@ -118,8 +115,8 @@ namespace ConsoleApp1
             int tableWidth = DEFAULT_COLUMN_WIDTH;
             int tableHeight = DEFAULT_COLUMN_END;
 
-            int totalWidth = columnQuantity * tableWidth + 2; // +2 для рамки
-            int totalHeight = rowQuantity * tableHeight + 6;  // +2 для рамки
+            int totalWidth = columnQuantity * tableWidth + 2;
+            int totalHeight = rowQuantity * tableHeight + 6;  
 
             Console.WriteLine("\t==== Multiplication Table ==== \t");
             ConsoleViewer.DrawBoarders(totalWidth, totalHeight);
@@ -158,9 +155,11 @@ namespace ConsoleApp1
             }
         }
 
+
+
         private static void TableForLoop(int startNumber, int endNumber)
         {
-            Console.WriteLine("\t\t==== Multiplication Table ==== \t\t");
+            
             for (int i = 1; i <= 10; i++)
             {
                 for (int j = startNumber; j <= endNumber; j++)
@@ -212,7 +211,7 @@ namespace ConsoleApp1
         {
             // TODO: придумать capacity
             int res = i * j;
-            StringBuilder sb = new StringBuilder(DEFAULT_COLUMN_WIDTH);
+            StringBuilder sb = new StringBuilder();
 
             sb.Append($"{j} * {i} = {res}");
             int spaceNumbers = DEFAULT_COLUMN_WIDTH - sb.Length;

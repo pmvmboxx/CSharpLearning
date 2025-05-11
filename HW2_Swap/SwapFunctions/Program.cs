@@ -114,7 +114,7 @@ namespace SwapFunctions
 
         public static void Swap4(ref int a, ref int b)
         {
-            a = a + b;
+            a += b;
             b = a - b;
             a = a - b;
         }
@@ -177,5 +177,6 @@ namespace SwapFunctions
                 arr[1] = temp;
             }
         }
+        // TODO: use in 
     }
 }
