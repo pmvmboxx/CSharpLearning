@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AverageFunctionOverloading;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,8 @@ namespace HW4_AverageOverloading
 {
     internal class Program
     {
+        const double EPSILON = 0.0001;
+
         static void Main(string[] args)
         {
             double num1 = 0.0;
@@ -15,7 +18,17 @@ namespace HW4_AverageOverloading
             {
                 num1 += 0.1;
             }
-            Console.WriteLine($"num1: {num1}"); 
+            Console.WriteLine($"num1: {num1}");
+
+            //if (num1 == 1.0)
+            if (Math.Abs(num1 - 1.0) < EPSILON)
+            {
+                Console.WriteLine("num1 == 1.0");
+            }
+            else
+            {
+                Console.WriteLine("num1 != 1.0");
+            }
 
             // TODO: попробовать реализовать второй вариант функции
             //double avg1 = GetAverage(1, 2, 3, 4);
@@ -45,36 +58,55 @@ namespace HW4_AverageOverloading
 
             //return sum / count;
 
-            double result = GetAverage(a, b, c, 0.0, 0.0);
-            return result;
+            //double result = GetAverage(new double[] { a, b, c });
+            return 0;
         }
 
         public static double GetAverage(double a, double b, double c, double d = 0.0, double e = 0.0) 
         {
             // TODO: IEEE754 правильное использование вещественных чисел
-            int count = 3;
+            //int count = 3;
 
-            if (d != 0.0)
-            {
-                count++;
-            }
+            //if (d != 0.0)
+            //{
+            //    count++;
+            //}
 
-            if (e != 0.0)
-            {
-                count++;
-            }
+            //if (e != 0.0)
+            //{
+            //    count++;
+            //}
 
-            double sum = a + b + c + d + e;
+            //double sum = a + b + c + d + e;
 
-            return sum / count;
+            //return sum / count;
+
+            return GetAverage( a, b, c, d, e );
+
         }
 
 
-        public static double GetAverage(params double[] args)
+        public static double GetAverage(IncorrectInput input, params double[] args)
         {
             if (args == null || args.Length == 0)
             {
-                
+                switch (input)
+                {
+                    case IncorrectInput.ReturnZero:
+                        Console.WriteLine("ReturnZero");
+                        break;
+                    case IncorrectInput.ReturnNaN:
+                        Console.WriteLine("ReturnNaN");
+                        break;
+                    case IncorrectInput.ThrowException:
+                        Console.WriteLine("ThrowException");
+                        break;
+                    case IncorrectInput.IgnoreAndContinue:
+                        Console.WriteLine("IgnoreAndContinue");
+                        break;
+                    default:
+                        break;
+                }
             }
 
             double sum = 0;
