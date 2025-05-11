@@ -34,9 +34,9 @@ namespace ConsoleApp1
             do
             {
                 // TODO: добавить параметры, чтобы можно было передавать разные меню
-                int selectedOption = ConsoleViewer.ShowMenu("TASK MENU", menuItems);
+                int selectedOption = ConsoleViewer.ShowMenuWithArrows("TASK MENU", menuItems);
 
-                Console.Write("Choose the task (or 0 to exit): ");
+                //Console.Write("Choose the task (or 0 to exit): ");
                 choice = selectedOption.ToString();
 
                 switch (choice)
@@ -62,9 +62,12 @@ namespace ConsoleApp1
                         CalculateRows(from_point, to_point, columnQuantity, out int rowQuantity, out int currentNumber);
 
                         Console.Clear();
+                        int totalHeight = rowQuantity * DEFAULT_COLUMN_END + 6;
+                        Console.BufferHeight = Math.Max(Console.BufferHeight, totalHeight + 10); 
+
                         DrawAllTables(to_point, columnQuantity, rowQuantity, currentNumber);
                         break;
-                    case "0":
+                    case "5":
                         Console.WriteLine("Exiting...");
                         break;
                     default:
@@ -112,6 +115,8 @@ namespace ConsoleApp1
         private static void DrawAllTables(int to, int columnQuantity,
                 int rowQuantity, int currentNumber)
         {
+            Console.Clear();
+
             int tableWidth = DEFAULT_COLUMN_WIDTH;
             int tableHeight = DEFAULT_COLUMN_END;
 
@@ -153,6 +158,8 @@ namespace ConsoleApp1
                     Console.WriteLine(new string('-', totalWidth - 2));
                 }
             }
+            Console.SetCursorPosition(0, Console.CursorTop + 5);
+            Console.WriteLine();
         }
 
 
