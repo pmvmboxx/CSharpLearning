@@ -44,54 +44,80 @@ namespace WeatherAggregator
         }
 
         // массив возмодных погодных явлений, в зависимости от сезона
+        // TODO: сделать использование break
+        // TODO: статические массивы
+        private static readonly Weather[] WinterWeather = new Weather[]
+        {
+            Weather.Snowy,
+            Weather.Cloudy,
+            Weather.Foggy,
+            Weather.Windy
+        };
+
+        private static readonly Weather[] SpringWeather = new Weather[]
+        {
+            Weather.Sunny,
+            Weather.Cloudy,
+            Weather.Rainy,
+            Weather.Windy
+        };
+
+        private static readonly Weather[] SummerWeather = new Weather[]
+        {
+            Weather.Sunny,
+            Weather.Rainy,
+            Weather.Thunderstorm,
+            Weather.Windy
+        };
+
+        private static readonly Weather[] AutumnWeather = new Weather[]
+        {
+            Weather.Cloudy,
+            Weather.Rainy,
+            Weather.Foggy,
+            Weather.Sunny
+        };
+
+        private static readonly Weather[] DefaultWeather = new Weather[] 
+        { 
+            Weather.Sunny 
+        };
+
         private static Weather[] GetSeasonalWeatherFlags(Month month)
         {
-            // TODO: сделать использование break
-            // TODO: статические массивы
+            Weather[] result = DefaultWeather; // по умолчанию - солнечная погода
+
             switch (month)
             {
                 case Month.December:
                 case Month.January:
                 case Month.February:
-                    return new Weather[]
-                    { 
-                        Weather.Snowy,
-                        Weather.Cloudy,
-                        Weather.Foggy,
-                        Weather.Windy
-                    };
+                    result = WinterWeather;
+                    break;
+
                 case Month.March:
                 case Month.April:
                 case Month.May:
-                    return new Weather[]
-                    { 
-                        Weather.Sunny,
-                        Weather.Cloudy,
-                        Weather.Rainy,
-                        Weather.Windy }
-                    ;
+                    result = SpringWeather;
+                    break;
+
                 case Month.June:
                 case Month.July:
                 case Month.August:
-                    return new Weather[]
-                    { Weather.Sunny,
-                      Weather.Rainy,
-                      Weather.Thunderstorm,
-                      Weather.Windy
-                    };
+                    result = SummerWeather;
+                    break;
+
                 case Month.September:
                 case Month.October:
                 case Month.November:
-                    return new Weather[]
-                    { Weather.Cloudy,
-                      Weather.Rainy,
-                      Weather.Foggy,
-                      Weather.Sunny
-                    };
+                    result = AutumnWeather;
+                    break;
+
                 default:
-                    return new Weather[]
-                    { Weather.Sunny };
+                    result = DefaultWeather;
+                    break;
             }
+            return result;
         }
 
         // проверка на противоречия
