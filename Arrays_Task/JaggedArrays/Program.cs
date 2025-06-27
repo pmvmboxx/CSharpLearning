@@ -9,14 +9,14 @@
 
         #region ---===###$$$ Swap min&max rows JAGGED $$$###===---
         /// <returns>A row index with a max value.</returns>
-        public static int GetMaxRowIndex(int[][] matrix, int rows, int cols)
+        public static int GetMaxRowIndex(int[][] matrix)
         {
             int max = matrix[0][0];
             int maxRow = 0;
 
-            for (int i = 0; i < rows; i++)
+            for (int i = 0; i < matrix.Length; i++)
             {
-                for (int j = 0; j < cols; j++)
+                for (int j = 0; j < matrix[i].Length; j++)
                 {
                     if (matrix[i][j] > max)
                     {
@@ -29,14 +29,14 @@
         }
 
         /// <returns>A row index with a min value.</returns>
-        public static int GetMinRowIndex(int[][] matrix, int rows, int cols)
+        public static int GetMinRowIndex(int[][] matrix)
         {
             int min = matrix[0][0];
             int minRow = 0;
 
-            for (int i = 0; i < rows; i++)
+            for (int i = 0; i < matrix.Length; i++)
             {
-                for (int j = 0; j < cols; j++)
+                for (int j = 0; j < matrix[i].Length; j++)
                 {
                     if (matrix[i][j] < min)
                     {
@@ -58,20 +58,10 @@
             {
                 return;
             }
-            else
-            {
 
-            }
-
-                int cols = matrix.GetLength(1);
-
-            for (int j = 0; j < cols; j++)
-            {
-                int temp = matrix[row1][j];
-                matrix[row1][j] = matrix[row2][j];
-                matrix[row2][j] = temp;
-
-            }
+            int[] temp = matrix[row1];
+            matrix[row1] = matrix[row2];
+            matrix[row2] = temp;
         }
         #endregion
     }
