@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudentManagementSystem.UI", "StudentManagementSystem.UI\StudentManagementSystem.UI.csproj", "{6ED261D7-B1F7-4C0A-9465-1BE90E4A5FBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudentManagementSystem.BL", "StudentManagementSystem.BL\StudentManagementSystem.BL.csproj", "{A8F89732-A5FB-436B-A71D-860EE7D7FECC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6ED261D7-B1F7-4C0A-9465-1BE90E4A5FBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ED261D7-B1F7-4C0A-9465-1BE90E4A5FBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ED261D7-B1F7-4C0A-9465-1BE90E4A5FBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ED261D7-B1F7-4C0A-9465-1BE90E4A5FBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8F89732-A5FB-436B-A71D-860EE7D7FECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8F89732-A5FB-436B-A71D-860EE7D7FECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8F89732-A5FB-436B-A71D-860EE7D7FECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8F89732-A5FB-436B-A71D-860EE7D7FECC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7CF020FB-DEC0-4C2B-A639-C469EB85E865}
+	EndGlobalSection
+EndGlobal
