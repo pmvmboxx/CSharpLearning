@@ -8,6 +8,7 @@
         private string _lastName;
         private DateTime _birthDate;
         private Status status;
+        private int[] _grades;
 
         public long RecordBookNumber
         {
@@ -95,12 +96,34 @@
             }
         }
 
-        public Student(long recordBookNumber, string firstName, string lastName, DateTime birthDate)
+
+        public int[] Grades
         {
-            _recordBookNumber = 0;
+            get
+            {
+                return _grades ?? new int[0]; 
+            }
+            set
+            {
+                status = Status.OK;
+
+                if (value == null || value.Length == 0)
+                {
+                    status = Status.EmptyGrades;
+                }
+                else 
+                {
+                    _grades = value;
+                }
+            }
+        }
+
+        public Student(long recordBookNumber, string firstName, string lastName, DateTime birthDate, int[] grades)
+        {
             _firstName = string.Empty;
-            _lastName = string.Empty;
-            _birthDate = DateTime.MinValue;
+            _lastName = string.Empty; 
+            _grades = Array.Empty<int>();
+            
 
             RecordBookNumber = recordBookNumber;
             FirstName = firstName;

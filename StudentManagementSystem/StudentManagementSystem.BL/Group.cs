@@ -9,25 +9,30 @@ namespace StudentManagementSystem.BL
     //TODO: перевод студентов\группы на след курс + архивная информация 
     //TODO: оценки студентов, привязка оценок к семестру
 
+
     public struct Group
     {
-        public const int DEFAULT_SIZE = 30;
-        public const int MIN_GROUP_STARTYEAR = 1900;
+        public const int DEFAULT_SIZE = 30; // дефолтный размер группы
+        public const int MIN_GROUP_STARTYEAR = 1900; // минимальный год начала обучения
+        public const int DEFAULT_RESIZE_VALUE = 2; // на сколько увеличивать массив студентов при нехватке места
 
-        private string _groupNumber;
-        private int _startYear;
-        private Student[] _students;
-        private int _studentCount;
-        private DegreeType _degreeType;
+        private string _groupNumber; // номер группы
+        private int _startYear; // год начала обучения
+        private Student[] _students; // массив студентов
+        private int _studentCount; // количество студентов (размерность массива)
+        private DegreeType _degreeType; // тип курса(длительность)
 
-        // autoproperty
+        #region ---+++===$$$ Properties $$$===+++---
+        
+        // статус последней операции
         public Status ErrorStatus
         {
             get;
-            private set;
+            private set; // чтобы нельзя было изменить статус извне
         }
 
-
+        // количество студентов в группе
+        // и проверка на пустоту
         public string GroupNumber
         {
             get
@@ -49,6 +54,7 @@ namespace StudentManagementSystem.BL
             }
         }
 
+        // год начала обучения
         public int StartYear
         {
             get
@@ -70,6 +76,7 @@ namespace StudentManagementSystem.BL
             }
         }
 
+        // тип курса(длительность)
         public DegreeType Degree
         {
             get => _degreeType;
@@ -88,13 +95,13 @@ namespace StudentManagementSystem.BL
             }
         }
 
+        #endregion
+
+        // конструктор
         public Group(string groupNumber, int startYear, DegreeType degreeType, int groupSize = DEFAULT_SIZE)
         {
-            //_groupNumber = string.Empty;
-            //_startYear = 0;
+            _groupNumber = string.Empty;
             _students = new Student[groupSize];
-            //_studentCount = 0;
-            //_degreeType = DegreeType.Bachelors; 
             ErrorStatus = Status.OK;
 
             GroupNumber = groupNumber;
@@ -102,47 +109,16 @@ namespace StudentManagementSystem.BL
             Degree = degreeType;
         }
 
+        #region ---+++===$$$ Methods $$$===+++---
 
-        public int GetCourse()
-        {
-            int currentYear = DateTime.Now.Year;
-            int course = currentYear - StartYear + 1;
-            int maxCourse;
-
-            switch (Degree)
-            {
-                case DegreeType.Bachelors:
-                    maxCourse = 4;
-                    break;
-                case DegreeType.Masters:
-                    maxCourse = 2;
-                    break;
-                case DegreeType.PhD:
-                    maxCourse = 5;
-                    break;
-                case DegreeType.TrainingCourse:
-                    maxCourse = 1;
-                    break;
-                default:
-                    maxCourse = 4;
-                    break;
-            }
-
-            if (course > maxCourse)
-            {
-                course = maxCourse;
-            }
-
-            return course;
-        }
-
+        // C - create
         public void AddStudent(Student student)
         {
             ErrorStatus = Status.BadOperation;
 
             if (_studentCount >= _students.Length)
             {
-                ResizeStudentsArray();
+                Array.Resize(ref _students, _studentCount + 1);
             }
 
             _students[_studentCount] = student;
@@ -154,22 +130,30 @@ namespace StudentManagementSystem.BL
         //TODO: 2?
         //TODO: передать размер в параметры
         //TODO: array.resize
-        private void ResizeStudentsArray()
+        private void ResizeStudentsArray(int increaseBy = DEFAULT_RESIZE_VALUE)
         {
+            if (increaseBy <= 0)
+            {
+                ErrorStatus = Status.BadOperation;
+                return;
+            }
+
             ErrorStatus = Status.BadOperation;
 
-            int newSize = _students.Length + 5;
+            int newSize = _students.Length + increaseBy;
             Student[] newArray = new Student[newSize];
+
             for (int i = 0; i < _students.Length; i++)
             {
                 newArray[i] = _students[i];
             }
+
             _students = newArray;
 
             ErrorStatus = Status.OK;
 
 #if DEBUG
-            Console.WriteLine("Added +5 students.");
+            Console.WriteLine($"Resized array: added +{increaseBy} students (new length: {_students.Length}).");
 #endif
         }
 
@@ -180,6 +164,7 @@ namespace StudentManagementSystem.BL
         //TODO: возвращать индекс
         //TODO: reduce the number of returns
 
+        // R - read
         public Student FindStudent(long recordBookNumber)
         {
             //bool found = Tr
@@ -218,12 +203,16 @@ namespace StudentManagementSystem.BL
 
             return positions.ToArray();
         }
+        // U - update
+
 
         //TODO: for1 - find(позиция студента), for2 - shift
         //TODO: использовать для studetn transfer
         //TODO: enum Status
         //TODO: array.copy
         //TODO: returns
+
+        //D - delete
         public Student RemoveStudent(long recordBookNumber)
         {
             int position = FindStudentPosition(recordBookNumber);
@@ -244,7 +233,11 @@ namespace StudentManagementSystem.BL
                 return default(Student);
             }
         }
+        #endregion
 
+        #region  ---+++===$$$ Auxiliary methods $$$===+++---
+
+        // поиск позиции студента в массиве по номеру зачетки
         private int FindStudentPosition(long recordBookNumber)
         {
             int position = -1;
@@ -260,5 +253,40 @@ namespace StudentManagementSystem.BL
             return position;
         }
 
+        // получение текущего курса
+        public int GetCourse()
+        {
+            int currentYear = DateTime.Now.Year;
+            int course = currentYear - StartYear + 1;
+            int maxCourse;
+
+            switch (Degree)
+            {
+                case DegreeType.Bachelors:
+                    maxCourse = 4;
+                    break;
+                case DegreeType.Masters:
+                    maxCourse = 2;
+                    break;
+                case DegreeType.PhD:
+                    maxCourse = 5;
+                    break;
+                case DegreeType.TrainingCourse:
+                    maxCourse = 1;
+                    break;
+                default:
+                    maxCourse = 4;
+                    break;
+            }
+
+            if (course > maxCourse)
+            {
+                course = maxCourse;
+            }
+
+            return course;
+        }
     }
+    #endregion
+
 }
