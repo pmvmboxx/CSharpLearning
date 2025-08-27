@@ -10,6 +10,8 @@
         private Status status;
         private int[] _grades;
 
+        #region ---+++===$$$ Properties $$$===+++---
+
         public long RecordBookNumber
         {
             get
@@ -96,7 +98,9 @@
             }
         }
 
-
+        // TODO: encapsulation of grades array
+        // TODO: реализовать, как индексатор
+        // TODO: grades count
         public int[] Grades
         {
             get
@@ -118,42 +122,29 @@
             }
         }
 
-        public Student(long recordBookNumber, string firstName, string lastName, DateTime birthDate, int[] grades)
+        #endregion 
+
+        // констуруктор
+        //TODO: clone 
+        //TODO: params for grades - для добавления нескольких оценок
+        public Student(long recordBookNumber, string firstName, string lastName, DateTime birthDate, params int[] grades)
         {
             _firstName = string.Empty;
             _lastName = string.Empty; 
-            _grades = Array.Empty<int>();
+            //_grades = Array.Empty<int>();
             
 
             RecordBookNumber = recordBookNumber;
             FirstName = firstName;
             LastName = lastName;
             BirthDate = birthDate;
+            Grades = grades;
 
         }
 
-        // GetLastOperationStatus() - readonly
-        // enum - LastOperationStatus(Ok, InvalidBirthday, EmptyFirstName, etc.) - alternative to exceptions
-        public void ShowStatus(Status status)
+        public Status GetLastOperationStatus()
         {
-            switch (status)
-            {
-                case Status.OK:
-                    Console.WriteLine("Student is valid.");
-                    break;
-                case Status.EmptyFirstName:
-                    Console.WriteLine("First name is missing.");
-                    break;
-                case Status.EmptyLastName:
-                    Console.WriteLine("Last name is missing.");
-                    break;
-                case Status.InvalidBirthday:
-                    Console.WriteLine("Birthday is not valid.");
-                    break;
-                default:
-                    Console.WriteLine("Unknown error.");
-                    break;
-            }
+            return status;
         }
 
         public override string ToString()

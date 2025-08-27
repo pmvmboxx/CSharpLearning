@@ -63,5 +63,11 @@ namespace StudentManagementSystem.UI
                     break;
             }
         }
+
+        //public void PrintInfo()
+        //{
+        //    Console.WriteLine($"RecordBook: {RecordBookNumber}, Name: {FirstName} {LastName}, Birth: {BirthDate.ToShortDateString()}");
+        //    Console.WriteLine("Grades: " + string.Join(", ", Grades));
+        //}
     }
 }

@@ -22,6 +22,7 @@ namespace StudentManagementSystem.UI
 
             Group[] allGroups = new Group[5];
             int groupCount = 0;
+            ConsoleViewer statuses = new ConsoleViewer();
 
             TaskType choice;
 
@@ -45,8 +46,8 @@ namespace StudentManagementSystem.UI
                         string lastName = Console.ReadLine();
                         DateTime birthDate = DateTime.Parse(Console.ReadLine());
 
-                        Student student = new Student(recordBook, firstName, lastName, birthDate);
-                        groupToAdd.AddStudent(student);
+                        Student student = new Student(recordBook, firstName, lastName, birthDate, 70, 80, 95);
+                        groupToAdd.Add(student);
 
                         Console.WriteLine("Студента додано.");
                         break;
@@ -69,20 +70,21 @@ namespace StudentManagementSystem.UI
                         Console.WriteLine("Групу створено.");
                         break;
 
+                    //TODO: отдельный метод для foreach
                     case TaskType.FindAStudent:
 
                         Console.Write("Введіть номер заліковки студента: ");
                         long searchRB = long.Parse(Console.ReadLine());
 
-                        foreach (var g in allGroups)
-                        {
-                            Student found = g.FindStudent(searchRB);
-                            if (g.ErrorStatus == Status.OK)
-                            {
-                                Console.WriteLine($"Студент знайдено у групі {g.GroupNumber}: {found}");
-                                break;
-                            }
-                        }
+                        //foreach (var g in allGroups)
+                        //{
+                        //    Student found = g.FindStudent(searchRB);
+                        //    if (g.ErrorStatus == Status.OK)
+                        //    {
+                        //        Console.WriteLine($"Студент знайдено у групі {g.GroupNumber}: {found}");
+                        //        break;
+                        //    }
+                        //}
                         break;
                     case TaskType.FindAGroup:
                         Console.Write("Введіть текст для пошуку: ");

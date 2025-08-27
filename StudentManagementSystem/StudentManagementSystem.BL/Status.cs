@@ -17,7 +17,8 @@ namespace StudentManagementSystem.BL
         NotFound,
         EmptyGroupNumber,
         InvalidStartYear,
-        InvalidDegreeType
+        InvalidDegreeType,
+        EmptyGrades
 
     }
 }

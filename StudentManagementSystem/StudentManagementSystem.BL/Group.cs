@@ -12,9 +12,9 @@ namespace StudentManagementSystem.BL
 
     public struct Group
     {
-        public const int DEFAULT_SIZE = 30; // дефолтный размер группы
-        public const int MIN_GROUP_STARTYEAR = 1900; // минимальный год начала обучения
-        public const int DEFAULT_RESIZE_VALUE = 2; // на сколько увеличивать массив студентов при нехватке места
+        public const int DEFAULT_SIZE = 30;    // дефолтный размер группы
+        public const int MIN_GROUP_STARTYEAR = 1900;    // минимальный год начала обучения
+        public const int DEFAULT_RESIZE_VALUE = 2;    // на сколько увеличивать массив студентов при нехватке места
 
         private string _groupNumber; // номер группы
         private int _startYear; // год начала обучения
@@ -112,7 +112,7 @@ namespace StudentManagementSystem.BL
         #region ---+++===$$$ Methods $$$===+++---
 
         // C - create
-        public void AddStudent(Student student)
+        public void Add(Student student)
         {
             ErrorStatus = Status.BadOperation;
 
@@ -126,13 +126,6 @@ namespace StudentManagementSystem.BL
 
             ErrorStatus = Status.OK;
         }
-
-
-        //TODO: поиск группы по текстовому полю -> поиск имя\фамилия\ID (схема обработки + как предоставить результат поиска)
-        //TODO: запретить измененние номера зачетки, кроме контруктора
-        //TODO: разделение на 2 функ-ии(поиск+новые значения) + показать, какие поля разрешено изменить
-        //TODO: возвращать индекс
-        //TODO: reduce the number of returns
 
         // R - read
         public bool FindStudent(long recordBookNumber, out Student foundStudent)
@@ -156,6 +149,7 @@ namespace StudentManagementSystem.BL
             return isFound;
         }
 
+        //TODO: private IsContain() -> struct Student
         public int[] SearchStudents(string searchTerm)
         {
             int[] tempPositions = new int[_studentCount]; // тут храним позиции найденных студентов, которые подходят под заданую строку
@@ -186,9 +180,10 @@ namespace StudentManagementSystem.BL
             return tempPositions;
         }
 
-        // U - update?
+        // U - update? (имеется начальное состояние -> реализовать внешний интерфейс для изменения информации)
 
         //D - delete
+        //TODO: Parse, TryParse -> TryRemoveStudent, out Student removedStudent
         public Student? RemoveStudent(long recordBookNumber)
         {
             Student? removedStudent = null; // deleted student
