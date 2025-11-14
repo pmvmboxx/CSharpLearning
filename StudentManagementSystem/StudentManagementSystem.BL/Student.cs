@@ -141,6 +141,21 @@
             Grades = grades;
 
         }
+        public double GetAverageGrade()
+        {
+            return Grades.Length == 0 ? 0 : Grades.Average();
+        }
+        public double AverageGrade
+        {
+            get
+            {
+                return GetAverageGrade();
+            }
+            set
+            {
+                _grades = new int[] { (int)Math.Round(value) };
+            }
+        }
 
         public Status GetLastOperationStatus()
         {

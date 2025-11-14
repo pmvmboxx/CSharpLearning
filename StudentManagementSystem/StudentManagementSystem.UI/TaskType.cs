@@ -10,12 +10,14 @@ namespace StudentManagementSystem.UI
     public enum TaskType
     {
         Exit = 0b00000000,
-        AddNewStudent = 0b00000001,
-        CreateNewGroup = 0b00000010,
+        Create = 0b00000001,
+        Add = 0b00000010,
         FindAStudent = 0b00000100,
         FindAGroup = 0b00001000,
         EditAStudent = 0b00010000,
         TransferAStudent = 0b00100000,
-        RemoveAStudent = 0b01000000
+        RemoveAStudent = 0b01000000,
+        AdvanceAGroup = 0b10000000,
+        SaveGroups = 0b10000001
     }
 }

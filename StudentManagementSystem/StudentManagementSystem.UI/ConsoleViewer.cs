@@ -9,32 +9,46 @@ namespace StudentManagementSystem.UI
 {
     internal class ConsoleViewer
     {
-        public static int ShowMenu(string title, string[] options)
+        public static int ShowMenu(string title, string[] menuItems)
         {
-            Console.WriteLine("=== " + title + " ===");
-
-            for (int i = 0; i < options.Length; i++)
-            {
-                Console.WriteLine($"{i + 1}. {options[i]}");
-            }
-
-            string? input;
-            int choice;
+            int selectedIndex = 0;
+            ConsoleKey key;
 
             do
             {
-                Console.WriteLine("Choose an option: ");
-                input = Console.ReadLine();
+                Console.Clear();
+                Console.WriteLine("=== " + title + " ===\n");
 
-                if (!int.TryParse(input, out choice) || choice < 1 || choice > options.Length)
+                for (int i = 0; i < menuItems.Length; i++)
                 {
-                    Console.WriteLine("Invalid input. Please enter a number between 1 and {0}: ", options.Length);
+                    if (i == selectedIndex)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"> {menuItems[i]}");
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"  {menuItems[i]}");
+                    }
                 }
 
-            }
-            while (!int.TryParse(input, out choice) || choice < 1 || choice > options.Length);
-            return choice;
+                key = Console.ReadKey(true).Key;
+
+                if (key == ConsoleKey.UpArrow)
+                {
+                    selectedIndex = (selectedIndex == 0) ? menuItems.Length - 1 : selectedIndex - 1;
+                }
+                else if (key == ConsoleKey.DownArrow)
+                {
+                    selectedIndex = (selectedIndex == menuItems.Length - 1) ? 0 : selectedIndex + 1;
+                }
+
+            } while (key != ConsoleKey.Enter);
+
+            return selectedIndex;
         }
+
 
         public void GetStatus(Status status)
         {

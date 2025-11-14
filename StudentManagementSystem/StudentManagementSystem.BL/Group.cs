@@ -95,6 +95,14 @@ namespace StudentManagementSystem.BL
             }
         }
 
+        public int StudentCount
+        {
+            get 
+            { 
+                return _studentCount; 
+            }
+        }
+
         #endregion
 
         // конструктор
@@ -109,7 +117,7 @@ namespace StudentManagementSystem.BL
             Degree = degreeType;
         }
 
-        #region ---+++===$$$ Methods $$$===+++---
+        #region ---+++===$$$ CRUD Methods $$$===+++---
 
         // C - create
         public void Add(Student student)
@@ -161,7 +169,7 @@ namespace StudentManagementSystem.BL
                 if (_students[i].FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) 
                         || _students[i].LastName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) 
                         || _students[i].RecordBookNumber.ToString().Contains(searchTerm))
-                {
+                { 
                     tempPositions[count++] = i; // доабвляем индекс найденного студента в массив
                 }
             }
@@ -181,19 +189,34 @@ namespace StudentManagementSystem.BL
         }
 
         // U - update? (имеется начальное состояние -> реализовать внешний интерфейс для изменения информации)
+        public void UpdateStudent(long recordBookNumber, Student updatedStudent)
+        {
+            ErrorStatus = Status.BadOperation;
+
+            int position = FindStudentPosition(recordBookNumber);
+
+            if (position != -1)
+            {
+                _students[position] = updatedStudent;
+                ErrorStatus = Status.OK;
+            }
+            else
+            {
+                ErrorStatus = Status.NotFound;
+            }
+        }
 
         //D - delete
         //TODO: Parse, TryParse -> TryRemoveStudent, out Student removedStudent
-        public Student? RemoveStudent(long recordBookNumber)
+        public Student? RemoveStudent(long recordBookNumber, out Student? removedStudent)
         {
-            Student? removedStudent = null; // deleted student
+            removedStudent = null;
             int position = FindStudentPosition(recordBookNumber);
 
             if (position != -1)
             {
                 removedStudent = _students[position];
 
-                // сдвигаем элементы массива, чтобы заполнить "дырку"
                 if (position < _studentCount - 1)
                 {
                     Array.Copy(_students, position + 1, _students, position, _studentCount - position - 1);
@@ -261,6 +284,45 @@ namespace StudentManagementSystem.BL
             }
 
             return course;
+        }
+
+        public string GetStudentInfo(int index)
+        {
+            if (index >= 0 && index < _studentCount)
+            {
+                return _students[index].ToString();
+            }
+                
+            else
+            {
+                return string.Empty;
+            }
+                
+        }
+
+        public bool TryRemoveStudent(long recordBookNumber, out Student? removedStudent)
+        {
+            removedStudent = null;
+            int position = FindStudentPosition(recordBookNumber);
+
+            if (position != -1)
+            {
+                removedStudent = _students[position];
+
+                if (position < _studentCount - 1)
+                {
+                    Array.Copy(_students, position + 1, _students, position, _studentCount - position - 1);
+                }
+
+                _studentCount--;
+                ErrorStatus = Status.OK;
+                return true;
+            }
+            else
+            {
+                ErrorStatus = Status.NotFound;
+                return false;
+            }
         }
     }
     #endregion
