@@ -12,7 +12,7 @@ namespace StudentManagementSystem.UI
 
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            string filePath = "groups.csv";
+            string filePath = "Group1.csv";
             CsvGroupRepository repo = new CsvGroupRepository(filePath);
 
             Group[] allGroups = repo.LoadGroups();
@@ -53,7 +53,7 @@ namespace StudentManagementSystem.UI
                         string groupNumber = Console.ReadLine();
 
                         Console.Write("Введіть рік початку: ");
-                        int startYear = int.Parse(Console.ReadLine());
+                        int? startYear = int.Parse(Console.ReadLine());
 
                         Console.WriteLine("Виберіть тип ступеня (0-Bachelors, 1-Masters, 2-PhD, 3-TrainingCourse): ");
                         DegreeType degree = (DegreeType)int.Parse(Console.ReadLine());
@@ -91,9 +91,9 @@ namespace StudentManagementSystem.UI
                         Console.Write("Введіть номер студентського: ");
                         long recordBook = long.Parse(Console.ReadLine());
                         Console.Write("Введіть ім'я: ");
-                        string firstName = Console.ReadLine();
+                        string? firstName = Console.ReadLine();
                         Console.Write("Введіть прізвище: ");
-                        string lastName = Console.ReadLine();
+                        string? lastName = Console.ReadLine();
                         Console.Write("Введіть дату народження (у форматі рррр-мм-дд): ");
                         DateTime birthDate = DateTime.Parse(Console.ReadLine());
 
