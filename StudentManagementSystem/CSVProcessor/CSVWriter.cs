@@ -22,6 +22,9 @@ namespace CSVProcessor
             _source = new FileInfo(filename);
 
 
+
+
+
             _stream = _source.OpenWrite();
             _sourceWriter = new StreamWriter(_stream);
         }
