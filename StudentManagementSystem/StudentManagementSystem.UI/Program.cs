@@ -10,13 +10,34 @@ namespace StudentManagementSystem.UI
             //Student student1 = new Student(1, "Maryna", "Ponomarenko", new DateTime(2005, 1, 15));
             //Console.WriteLine(student1);
 
+            //TODO: выделить отдельные функции outside of Main()
+
+
             Console.OutputEncoding = System.Text.Encoding.UTF8;
+         
+            List<Group> allGroups = CsvGroupRepository.ReadGroups("Groups.csv");
 
-            string filePath = "Group1.csv";
-            CsvGroupRepository repo = new CsvGroupRepository(filePath);
+            //string filePath = "Group1.csv";
+            //CsvGroupRepository repo = new CsvGroupRepository(filePath);
 
-            Group[] allGroups = repo.LoadGroups();
-            int groupCount = allGroups.Length;
+
+            //Group[] allGroups = repo.LoadGroups();
+            //TODO: Load(),EditStudents(), Save() -> newFile
+
+            //Group first = new Group("PA-22-1", 2024, DegreeType.Bachelors, 10);
+
+            for (int i = 0; i < allGroups.Count; i++)
+            {
+                Group current = allGroups[i];
+                string fileName = current.GroupNumber + ".csv";
+                CsvGroupRepository.ReadStudents(ref current, fileName);
+                allGroups[i] = current;
+            }
+
+
+            //repo.ReadStudents(ref first);
+            //Group[] allGroups = new Group[] {first};
+            int groupCount = allGroups.Count;
 
             string[] menuItems = {
              "Вийти",
@@ -46,6 +67,7 @@ namespace StudentManagementSystem.UI
                     case TaskType.Exit:
                         break;
                     case TaskType.Create:
+                        //TODO: Create()  ->  consoleviewer
                         Console.Clear();
                         Console.WriteLine("=== Створення групи ===\n");
 
@@ -53,7 +75,7 @@ namespace StudentManagementSystem.UI
                         string groupNumber = Console.ReadLine();
 
                         Console.Write("Введіть рік початку: ");
-                        int? startYear = int.Parse(Console.ReadLine());
+                        int startYear = int.Parse(Console.ReadLine());
 
                         Console.WriteLine("Виберіть тип ступеня (0-Bachelors, 1-Masters, 2-PhD, 3-TrainingCourse): ");
                         DegreeType degree = (DegreeType)int.Parse(Console.ReadLine());
@@ -67,7 +89,7 @@ namespace StudentManagementSystem.UI
 
                         break;
                     case TaskType.Add:
-
+                        //TODO: InputStudent(out Student student)
                         if (groupCount == 0)
                         {
                             Console.WriteLine("Спочатку створіть хоча б одну групу.");
@@ -119,7 +141,7 @@ namespace StudentManagementSystem.UI
                                 continue;
                             }
 
-
+                            //TODO: InputStudentsCriteria()
                             // за номером заліковки
                             if (long.TryParse(query, out long recordBookNumber))
                             {
@@ -133,6 +155,7 @@ namespace StudentManagementSystem.UI
                             }
                             else
                             {
+                                //TODO: InputStudentsCriteria()
                                 // за ім'ям або прізвищем
                                 int[] indices = g.SearchStudents(query);
                                 if (g.ErrorStatus == Status.OK && indices.Length > 0)
@@ -197,6 +220,7 @@ namespace StudentManagementSystem.UI
                         break;
 
                     case TaskType.EditAStudent:
+                        //TODO: EdtiStudent() -> ConsoleViewer
                         Console.Clear();
                         Console.WriteLine("=== Редагування студента ===");
 
@@ -236,6 +260,7 @@ namespace StudentManagementSystem.UI
 
                             switch (editChoice)
                             {
+                                //TODO: enum
                                 case 0:
                                     Console.Write("Введіть нове ім'я: ");
                                     studentToEdit.FirstName = Console.ReadLine();
@@ -306,7 +331,8 @@ namespace StudentManagementSystem.UI
                                     allGroups[editGroupIndex] = selectedGroup;
 
                                     targetGroup.Add(studentToEdit);
-                                    allGroups[Array.IndexOf(allGroups, targetGroup)] = targetGroup;
+                                    int targetPosition = allGroups.IndexOf(targetGroup);
+                                    allGroups[targetPosition] = targetGroup;
 
                                     Console.WriteLine($"\nСтудента переведено до групи {targetGroup.GroupNumber}!");
                                     isDeleted = true;
@@ -337,10 +363,12 @@ namespace StudentManagementSystem.UI
                         Console.ReadKey();
                         break;
                     case TaskType.AdvanceAGroup:
+                        //TODO: Input() - consoleviwer
                         Console.Write("Введіть номер групи: ");
                         string groupToRemoveFrom = Console.ReadLine();
 
-                        Group groupRemove = Array.Find(allGroups, g => g.GroupNumber == groupToRemoveFrom);
+                        int groupPosition = allGroups.Find(g => g.GroupNumber == groupToRemoveFrom);
+                        Group groupRemove = allGroups[groupPosition];
 
                         Console.Write("Введіть номер заліковки студента для видалення: ");
                         long rbToRemove = long.Parse(Console.ReadLine());
@@ -361,13 +389,15 @@ namespace StudentManagementSystem.UI
                         Console.WriteLine("Операція завершена.");
                         break;
                     case TaskType.SaveGroups:
-                        repo.SaveGroups(allGroups.Take(groupCount).ToArray());
+                        //repo.SaveGroups(allGroups.Take(groupCount).ToArray());
                         Console.WriteLine("Групи збережено у CSV.");
                         break;
                 }
 
             }
             while (choice != TaskType.Exit);
+
+            CsvGroupRepository.WriteGroups("Groups2.csv", allGroups);
         }
 
         //TODO: UI
