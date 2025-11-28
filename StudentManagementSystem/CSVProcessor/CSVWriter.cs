@@ -21,10 +21,7 @@ namespace CSVProcessor
         {
             _source = new FileInfo(filename);
 
-            //if (_source.Exists)
-            //{
-               
-            //}
+
             _stream = _source.OpenWrite();
             _sourceWriter = new StreamWriter(_stream);
         }
