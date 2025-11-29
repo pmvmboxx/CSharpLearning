@@ -21,25 +21,14 @@ namespace CSVProcessor
         {
             _source = new FileInfo(filename);
 
-
-
-
-
             _stream = _source.OpenWrite();
             _sourceWriter = new StreamWriter(_stream);
         }
 
         public void Write(string[] source)
         {
-            StringBuilder destination = new StringBuilder();
-
-            for (int i = 0; i < source.Length - 1; i++)
-            {
-                destination.AppendFormat("{0}, ", source[i]);
-            }
-
-            destination.AppendFormat("{0}", source[source.Length - 1]);
-            _sourceWriter.WriteLine(destination.ToString());
+            string text = string.Join(", ", source);
+            _sourceWriter.WriteLine(text);
         }
 
         public void Close()

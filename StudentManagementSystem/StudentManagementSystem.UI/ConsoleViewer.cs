@@ -78,6 +78,23 @@ namespace StudentManagementSystem.UI
             }
         }
 
+        public static void CreateGroup(out string groupNumber, out int startYear, out DegreeType degree, out Group newGroup)
+        {
+            Console.Clear();
+            Console.WriteLine("=== Створення групи ===\n");
+
+            Console.Write("Введіть номер групи: ");
+            groupNumber = Console.ReadLine();
+
+            Console.Write("Введіть рік початку: ");
+            startYear = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Виберіть тип ступеня (0-Bachelors, 1-Masters, 2-PhD, 3-TrainingCourse): ");
+            degree = (DegreeType)int.Parse(Console.ReadLine());
+
+            newGroup = new Group(groupNumber, startYear, degree);
+        }
+
         //public void PrintInfo()
         //{
         //    Console.WriteLine($"RecordBook: {RecordBookNumber}, Name: {FirstName} {LastName}, Birth: {BirthDate.ToShortDateString()}");

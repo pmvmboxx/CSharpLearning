@@ -107,6 +107,46 @@ namespace StudentManagementSystem.DAL
 
             return groups;
         }
+        public static void ReadStudents(ref Group g)
+        {
+            string fileName = g.GroupNumber + ".csv";      
+
+            CSVReader reader = new CSVReader(fileName);
+
+            while (!reader.EndOfData)
+            {
+                string[] sParts = reader.GetLine();
+                if (sParts == null)
+                {
+                    continue;
+                }
+
+                if (/*sParts.Length >= 7 &&*/
+                    long.TryParse(sParts[0], out long rb) &&
+                    DateTime.TryParse(sParts[3], out DateTime birth)) //&&
+                    //double.TryParse(sParts[4], out double g1) &&
+                    //double.TryParse(sParts[5], out double g2) &&
+                    //double.TryParse(sParts[6], out double g3))
+                {
+                    Student student = new Student(rb, sParts[1], sParts[2], birth);
+                    g.Add(student);
+                }
+
+            }
+
+            reader.Close();
+        }
+
+        //var sParts = studentStr.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        //                    if (sParts.Length >= 7 &&
+        //                        long.TryParse(sParts[0], out long rb) &&
+        //                        DateTime.TryParse(sParts[3], out DateTime birth) &&
+        //                        double.TryParse(sParts[4], out double g1) &&
+        //                        double.TryParse(sParts[5], out double g2) &&
+        //                        double.TryParse(sParts[6], out double g3))
+        //                    {
+        //                        Student student = new Student(rb, sParts[1], sParts[2], birth, g1, g2, g3);
+        //                        group.Add(student);
 
         //public void SaveGroups(Group[] groups)
         //{
@@ -149,6 +189,30 @@ namespace StudentManagementSystem.DAL
                     source[i].GroupNumber,
                     source[i].StartYear.ToString(),
                     source[i].Degree.ToString()
+                };
+
+                writer.Write(lines);
+            }
+            writer.Close();
+        }
+
+        public static void WriteStudents(Group g)
+        {
+            CSVWriter writer = new CSVWriter(g.GroupNumber + ".csv");
+
+            for (int i = 0; i < g.StudentCount; i++)
+            {
+                if(!g.GetStudentInfo(i, out Student current))
+                {
+                    continue;
+                }
+
+                string[] lines = new string[]
+                { 
+                    current.RecordBookNumber.ToString(),
+                    current.FirstName.ToString(),
+                    current.LastName.ToString(),
+                    current.BirthDate.ToString(),
                 };
 
                 writer.Write(lines);
@@ -214,17 +278,7 @@ namespace StudentManagementSystem.DAL
         //                string[] studentStrings = studentsPart.Split('|');
         //                foreach (var studentStr in studentStrings)
         //                {
-        //                    var sParts = studentStr.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-        //                    if (sParts.Length >= 7 &&
-        //                        long.TryParse(sParts[0], out long rb) &&
-        //                        DateTime.TryParse(sParts[3], out DateTime birth) &&
-        //                        double.TryParse(sParts[4], out double g1) &&
-        //                        double.TryParse(sParts[5], out double g2) &&
-        //                        double.TryParse(sParts[6], out double g3))
-        //                    {
-        //                        Student student = new Student(rb, sParts[1], sParts[2], birth, g1, g2, g3);
-        //                        group.Add(student);
+        //                   
         //                    }
         //                }
         //            }

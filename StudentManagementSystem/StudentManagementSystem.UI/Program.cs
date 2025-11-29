@@ -29,8 +29,7 @@ namespace StudentManagementSystem.UI
             for (int i = 0; i < allGroups.Count; i++)
             {
                 Group current = allGroups[i];
-                string fileName = current.GroupNumber + ".csv";
-                CsvGroupRepository.ReadStudents(ref current, fileName);
+                CsvGroupRepository.ReadStudents(ref current);
                 allGroups[i] = current;
             }
 
@@ -67,20 +66,13 @@ namespace StudentManagementSystem.UI
                     case TaskType.Exit:
                         break;
                     case TaskType.Create:
-                        //TODO: Create()  ->  consoleviewer
-                        Console.Clear();
-                        Console.WriteLine("=== Створення групи ===\n");
+                        string groupNumber;
+                        int startYear;
+                        DegreeType degree; 
+                        Group newGroup;
 
-                        Console.Write("Введіть номер групи: ");
-                        string groupNumber = Console.ReadLine();
+                        ConsoleViewer.CreateGroup(out groupNumber, out startYear, out degree, out newGroup);
 
-                        Console.Write("Введіть рік початку: ");
-                        int startYear = int.Parse(Console.ReadLine());
-
-                        Console.WriteLine("Виберіть тип ступеня (0-Bachelors, 1-Masters, 2-PhD, 3-TrainingCourse): ");
-                        DegreeType degree = (DegreeType)int.Parse(Console.ReadLine());
-
-                        Group newGroup = new Group(groupNumber, startYear, degree);
                         allGroups[groupCount] = newGroup;
                         groupCount++;
 
@@ -96,7 +88,7 @@ namespace StudentManagementSystem.UI
                             break;
                         }
 
-
+                        //extract method
                         string[] groupNames = new string[groupCount];
                         for (int i = 0; i < groupCount; i++)
                         {
@@ -105,22 +97,8 @@ namespace StudentManagementSystem.UI
 
                         int selectedGroupIndex = ConsoleViewer.ShowMenu("Виберіть групу для додавання студента", groupNames);
                         Group groupToAdd = allGroups[selectedGroupIndex];
-
-                        Console.Clear();
-                        Console.WriteLine($"Обрано групу: {groupToAdd.GroupNumber}\n");
-
-
-                        Console.Write("Введіть номер студентського: ");
-                        long recordBook = long.Parse(Console.ReadLine());
-                        Console.Write("Введіть ім'я: ");
-                        string? firstName = Console.ReadLine();
-                        Console.Write("Введіть прізвище: ");
-                        string? lastName = Console.ReadLine();
-                        Console.Write("Введіть дату народження (у форматі рррр-мм-дд): ");
-                        DateTime birthDate = DateTime.Parse(Console.ReadLine());
-
-                        Student student = new Student(recordBook, firstName, lastName, birthDate, 70, 80, 95);
-                        groupToAdd.Add(student);
+                        AddToGroup(ref groupToAdd);
+                        allGroups[selectedGroupIndex] = groupToAdd;
 
                         Console.WriteLine("Студента додано.");
                         break;
@@ -163,7 +141,12 @@ namespace StudentManagementSystem.UI
                                     Console.WriteLine($"\nГрупа: {g.GroupNumber}");
                                     foreach (int i in indices)
                                     {
-                                        Console.WriteLine(g.GetStudentInfo(i));
+                                        if (!g.GetStudentInfo(i, out Student current))
+                                        {
+                                            continue;
+                                        }
+
+                                        Console.WriteLine(current);
                                     }
                                     foundAny = true;
                                 }
@@ -203,7 +186,12 @@ namespace StudentManagementSystem.UI
 
                                 foreach (int i in indices)
                                 {
-                                    Console.WriteLine($" - {g.GetStudentInfo(i)}");
+                                    if (!g.GetStudentInfo(i, out Student current))
+                                    {
+                                        continue;
+                                    }
+
+                                    Console.WriteLine($" - {current}");
                                 }
 
                                 foundGroup = true;
@@ -367,8 +355,8 @@ namespace StudentManagementSystem.UI
                         Console.Write("Введіть номер групи: ");
                         string groupToRemoveFrom = Console.ReadLine();
 
-                        int groupPosition = allGroups.Find(g => g.GroupNumber == groupToRemoveFrom);
-                        Group groupRemove = allGroups[groupPosition];
+                        Group groupRemove = allGroups.Find(g => g.GroupNumber == groupToRemoveFrom);
+                        //Group groupRemove = allGroups[groupPosition];
 
                         Console.Write("Введіть номер заліковки студента для видалення: ");
                         long rbToRemove = long.Parse(Console.ReadLine());
@@ -398,7 +386,32 @@ namespace StudentManagementSystem.UI
             while (choice != TaskType.Exit);
 
             CsvGroupRepository.WriteGroups("Groups2.csv", allGroups);
+            foreach (var g in allGroups)
+            {
+                CsvGroupRepository.WriteStudents(g);
+            }
+
         }
+
+        private static void AddToGroup(ref Group groupToAdd)
+        {
+            Console.Clear();
+            Console.WriteLine($"Обрано групу: {groupToAdd.GroupNumber}\n");
+
+            Console.Write("Введіть номер студентського: ");
+            long recordBook = long.Parse(Console.ReadLine());
+            Console.Write("Введіть ім'я: ");
+            string?  firstName = Console.ReadLine();
+            Console.Write("Введіть прізвище: ");
+            string? lastName = Console.ReadLine();
+            Console.Write("Введіть дату народження (у форматі рррр-мм-дд): ");
+            DateTime birthDate = DateTime.Parse(Console.ReadLine());
+
+
+            Student student = new Student(recordBook, firstName, lastName, birthDate, 70, 80, 95);
+            groupToAdd.Add(student);
+        }
+
 
         //TODO: UI
         //public void PrintGroup()

@@ -286,16 +286,18 @@ namespace StudentManagementSystem.BL
             return course;
         }
 
-        public string GetStudentInfo(int index)
+        public bool GetStudentInfo(int index, out Student result)
         {
             if (index >= 0 && index < _studentCount)
             {
-                return _students[index].ToString();
+                result = _students[index];
+                return true;
             }
                 
             else
             {
-                return string.Empty;
+                result = new Student();
+                return false;
             }
                 
         }
